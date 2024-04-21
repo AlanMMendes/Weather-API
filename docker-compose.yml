@@ -8,5 +8,5 @@ services:
   environment:
     POSTGRES_PASSWORD: pass123
     POSTGRES_USER: user_demo
-    POSTGRES_DB: db_demo
+    POSTGRES_DB: db_user
    
