@@ -13,7 +13,7 @@ export class AuthService {
   async signIn(
     username: string,
     pass: string,
-  ): Promise<{ access_token: string }> {
+  ): Promise<{ access_token: string; username: string }> {
     const user = await this.usersService.findOne(username, pass);
 
     if (!user) {
@@ -29,6 +29,7 @@ export class AuthService {
 
     return {
       access_token: await this.jwtService.signAsync(payload),
+      username: user?.username,
     };
   }
 }
