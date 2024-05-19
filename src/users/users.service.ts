@@ -17,16 +17,19 @@ export class UsersService {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(createUserDto.password, salt);
     const alreadyInUse = await this.findAlreadyUsed(createUserDto.username);
-
-    if (alreadyInUse.length > 1) {
-      throw new UnauthorizedException('User already in use, choose another!');
+    if (createUserDto.username.length > 0 && createUserDto.password.length) {
+      if (alreadyInUse.length > 1) {
+        throw new UnauthorizedException('User already in use, choose another!');
+      } else {
+        return this.userRepository.save({
+          id: createUserDto.id,
+          username: createUserDto.username,
+          password: hash,
+          isActive: true,
+        });
+      }
     } else {
-      return this.userRepository.save({
-        id: createUserDto.id,
-        username: createUserDto.username,
-        password: hash,
-        isActive: true,
-      });
+      throw new UnauthorizedException('Username or Password is missing');
     }
   }
 
