@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
@@ -16,20 +16,31 @@ export class UsersService {
   async create(createUserDto: any) {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(createUserDto.password, salt);
+    const alreadyInUse = await this.findAlreadyUsed(createUserDto.username);
 
-    return this.userRepository.save({
-      id: createUserDto.id,
-      username: createUserDto.username,
-      password: hash,
-      isActive: true,
-    });
+    if (alreadyInUse.length > 1) {
+      throw new UnauthorizedException('User already in use, choose another!');
+    } else {
+      return this.userRepository.save({
+        id: createUserDto.id,
+        username: createUserDto.username,
+        password: hash,
+        isActive: true,
+      });
+    }
   }
 
   findAll() {
     return this.userRepository.find();
   }
 
-  findOne(username: any, password: any): Promise<Users | undefined> {
+  findAlreadyUsed(username: any) {
+    return this.userRepository.find({
+      where: { username: username },
+    });
+  }
+
+  findOne(username: any, password?: any): Promise<Users | undefined> {
     return this.userRepository.findOne({
       where: { username: username },
     });
