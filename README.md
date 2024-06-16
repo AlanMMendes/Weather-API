@@ -1,6 +1,6 @@
 ## Description
 
-[Nest API](https://github.com/nestjs/nest) for the [WeatherApp](https://github.com/AlanMMendes/Weather-App) this API it's not optional, it's needed to use with the Weather App, because it has user/auth for the Weather App, also it's needed to install Docker to be able to use the User database.
+[Nest API](https://github.com/nestjs/nest) with Guard/Auth and User Registration, included docker for DB virtualization.
 
 ## Installation
 
